@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المناوبات الذكي</title>
+    <style>
+        /* إعداد الألوان العامة للموقع */
+        :root {
+            --primary: #005f73;       /* أزرق نيلي غامق للهوية */
+            --secondary: #0a9396;     /* أزرق تركواز للعناصر الفرعية */
+            --bg-body: #f4f7f6;       /* خلفية مريحة للعين */
+            --text-dark: #2b2d42;     /* لون النصوص الأساسية */
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* حاوية الموقع الرئيسية */
+        .main-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* تصميم الهيدر (العنوان) */
+        .header-section {
+            text-align: center;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header-section h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .header-section p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        /* تنسيق جدول المناوبات */
+        .table-responsive {
+            overflow-x: auto; /* يضمن ظهور شريط تصفح عرضي لو فُتح من الجوال */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 16px;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 1rem;
+        }
+
+        /* تأثير عند تمرير الماوس على الصفوف */
+        tr:hover {
+            background-color: rgba(10, 147, 150, 0.05);
+        }
+
+        /* تصميم بطاقات الحالة (البادج) */
+        .badge {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .status-on {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-off {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        /* أسفل الصفحة */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <!-- عنوان الصفحة -->
+    <div class="header-section">
+        <h1>جدول تغطية المناوبات اليومية</h1>
+        <p>متابعة وتوزيع المهام وفترات الحضور والغياب بشكل دوري</p>
+    </div>
+
+    <!-- الجدول -->
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>اليوم</th>
+                    <th>الفترة</th>
+                    <th>المناوب الأساسي</th>
+                    <th>المناوب الاحتياطي</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>الأحد</strong></td>
+                    <td>الصباحية (08:00 ص - 04:00 م)</td>
+                    <td>أ. محمد القحطاني</td>
+                    <td>أ. خالد العتيبي</td>
+                    <td><span class="badge status-on">على رأس العمل</span></td>
+                </tr>
+                <tr>
+                    <td><strong>الإثنين</strong></td>
+                    <td>الصباحية (08:00 ص - 04:00 م)</td>
+                    <td>أ. عبدالله الشهري</td>
+                    <td>أ. فهد الدوسري</td>
+                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
+                </tr>
+                <tr>
+                    <td><strong>الثلاثاء</strong></td>
+                    <td>المسائية (04:00 م - 12:00 ص)</td>
+                    <td>أ. سلمان الفهد</td>
+                    <td>أ. علي الشمري</td>
+                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
+                </tr>
+                <tr>
+                    <td><strong>الأربعاء</strong></td>
+                    <td>الصباحية (08:00 ص - 04:00 م)</td>
+                    <td>أ. عمر الزهراني</td>
+                    <td>أ. ماجد الحربي</td>
+                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
+                </tr>
+                <tr>
+                    <td><strong>الخميس</strong></td>
+                    <td>المسائية (04:00 م - 12:00 ص)</td>
+                    <td>أ. يوسف العنزي</td>
+                    <td>أ. سلطان المطيري</td>
+                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        نظام المناوبات السحابي © 2026 | مستضاف عبر GitHub Pages
+    </div>
+</div>
+
+</body>
+</html>
