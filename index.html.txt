@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المناوبات الذكي</title>
+    <title>لوحة المؤشرات والإنتاجية - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* إعداد الألوان العامة للموقع */
         :root {
-            --primary: #005f73;       /* أزرق نيلي غامق للهوية */
-            --secondary: #0a9396;     /* أزرق تركواز للعناصر الفرعية */
-            --bg-body: #f4f7f6;       /* خلفية مريحة للعين */
-            --text-dark: #2b2d42;     /* لون النصوص الأساسية */
+            --primary: #005f73;
+            --secondary: #0a9396;
+            --bg-body: #f4f7f6;
+            --text-dark: #2b2d42;
             --white: #ffffff;
+            --success: #2a9d8f;
         }
 
         body {
@@ -19,162 +20,188 @@
             background-color: var(--bg-body);
             color: var(--text-dark);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* حاوية الموقع الرئيسية */
-        .main-container {
-            max-width: 1000px;
-            margin: 30px auto;
-            background: var(--white);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 15px auto;
         }
 
-        /* تصميم الهيدر (العنوان) */
-        .header-section {
+        /* عنوان اللوحة */
+        .header-dashboard {
             text-align: center;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
         }
 
-        .header-section h1 {
+        .header-dashboard h1 {
+            margin: 0 0 5px 0;
             color: var(--primary);
-            font-size: 2rem;
-            margin: 0 0 10px 0;
+            font-size: 1.8rem;
         }
 
-        .header-section p {
+        /* كروت المؤشرات السريعة */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border-right: 5px solid var(--primary);
+            text-align: center;
+        }
+
+        .stat-card.success-border {
+            border-right-color: var(--success);
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
             color: #6c757d;
-            margin: 0;
-            font-size: 1.05rem;
+            margin-bottom: 5px;
         }
 
-        /* تنسيق جدول المناوبات */
-        .table-responsive {
-            overflow-x: auto; /* يضمن ظهور شريط تصفح عرضي لو فُتح من الجوال */
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: right;
-        }
-
-        th {
-            background-color: var(--primary);
-            color: var(--white);
-            padding: 16px;
-            font-weight: 600;
-            font-size: 1.05rem;
-        }
-
-        td {
-            padding: 16px;
-            border-bottom: 1px solid #e9ecef;
-            font-size: 1rem;
-        }
-
-        /* تأثير عند تمرير الماوس على الصفوف */
-        tr:hover {
-            background-color: rgba(10, 147, 150, 0.05);
-        }
-
-        /* تصميم بطاقات الحالة (البادج) */
-        .badge {
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.85rem;
+        .stat-value {
+            font-size: 1.6rem;
             font-weight: bold;
-            display: inline-block;
+            color: var(--text-dark);
         }
 
-        .status-on {
-            background-color: #d4edda;
-            color: #155724;
+        /* شبكة الشارتات */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
         }
 
-        .status-off {
-            background-color: #fff3cd;
-            color: #856404;
+        .chart-box {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            min-height: 300px;
         }
 
-        /* أسفل الصفحة */
+        .chart-box h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
         .footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 30px;
             color: #adb5bd;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <!-- عنوان الصفحة -->
-    <div class="header-section">
-        <h1>جدول تغطية المناوبات اليومية</h1>
-        <p>متابعة وتوزيع المهام وفترات الحضور والغياب بشكل دوري</p>
+<div class="dashboard-container">
+    
+    <div class="header-dashboard">
+        <h1>لوحة مؤشرات الأداء والإنتاجية</h1>
+        <p style="margin: 0; color: #6c757d; font-size: 0.95rem;">رصد وتخطيط مستويات الإنجاز وتوزيع المهام دورياً</p>
     </div>
 
-    <!-- الجدول -->
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>اليوم</th>
-                    <th>الفترة</th>
-                    <th>المناوب الأساسي</th>
-                    <th>المناوب الاحتياطي</th>
-                    <th>الحالة</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>الأحد</strong></td>
-                    <td>الصباحية (08:00 ص - 04:00 م)</td>
-                    <td>أ. محمد القحطاني</td>
-                    <td>أ. خالد العتيبي</td>
-                    <td><span class="badge status-on">على رأس العمل</span></td>
-                </tr>
-                <tr>
-                    <td><strong>الإثنين</strong></td>
-                    <td>الصباحية (08:00 ص - 04:00 م)</td>
-                    <td>أ. عبدالله الشهري</td>
-                    <td>أ. فهد الدوسري</td>
-                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
-                </tr>
-                <tr>
-                    <td><strong>الثلاثاء</strong></td>
-                    <td>المسائية (04:00 م - 12:00 ص)</td>
-                    <td>أ. سلمان الفهد</td>
-                    <td>أ. علي الشمري</td>
-                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
-                </tr>
-                <tr>
-                    <td><strong>الأربعاء</strong></td>
-                    <td>الصباحية (08:00 ص - 04:00 م)</td>
-                    <td>أ. عمر الزهراني</td>
-                    <td>أ. ماجد الحربي</td>
-                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
-                </tr>
-                <tr>
-                    <td><strong>الخميس</strong></td>
-                    <td>المسائية (04:00 م - 12:00 ص)</td>
-                    <td>أ. يوسف العنزي</td>
-                    <td>أ. سلطان المطيري</td>
-                    <td><span class="badge status-off">انتظار / استدعاء</span></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-title">إجمالي الملفات المكتملة</div>
+            <div class="stat-value">148 ملف</div>
+        </div>
+        <div class="stat-card success-border">
+            <div class="stat-title">نسبة الجودة الإجمالية</div>
+            <div class="stat-value">94.2%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-title">المناوبات المغطاة هذا الشهر</div>
+            <div class="stat-value">26 فترة</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        
+        <div class="chart-box">
+            <h3>معدل إنتاجية الموظفين (الملفات المنجزة)</h3>
+            <canvas id="barChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h3>نسبة توزيع فترات التغطية والمناوبات</h3>
+            <canvas id="pieChart"></canvas>
+        </div>
+
     </div>
 
     <div class="footer">
-        نظام المناوبات السحابي © 2026 | مستضاف عبر GitHub Pages
+        داشبورد المؤشرات الذكي © 2026 | مستضاف عبر GitHub Pages
     </div>
 </div>
+
+<script>
+    // 1. إعداد شارت الأعمدة (إنتاجية الموظفين)
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: ['أ. أحمد', 'أ. عبدالله', 'أ. سلمان', 'أ. عمر', 'أ. يوسف'], // أسماء الموظفين
+            datasets: [{
+                label: 'عدد الملفات المغلقة',
+                data: [35, 42, 28, 48, 31], // الأرقام الخاصة بكل موظف
+                backgroundColor: '#0a9396',
+                borderWidth: 0,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { labels: { font: { family: 'Segoe UI' } } }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // 2. إعداد الشارت الدائري (توزيع الفترات)
+    const ctxPie = document.getElementById('pieChart').getContext('2d');
+    new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: ['الفترة الصباحية', 'الفترة المسائية', 'فترة الحوارية/الطوارئ'],
+            datasets: [{
+                data: [55, 30, 15], // النسب المئوية أو الأعداد
+                backgroundColor: ['#005f73', '#0a9396', '#e9d8a6'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { font: { family: 'Segoe UI' } }
+                }
+            }
+        }
+    });
+</script>
 
 </body>
 </html>
